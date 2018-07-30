@@ -68,6 +68,10 @@ func (fs *FileSystem) Create(
 	}
 
 	req, _ = http.NewRequest("PUT", u.String(), data)
+	// for HttpFs compatibility
+	// https://www.ibm.com/support/knowledgecenter/en/SSPT3X_3.0.0/com.ibm.swg.im.infosphere.biginsights.admin.doc/doc/admin_fileupload_rest_apis.html
+	req.Header.Set("Content-Type", "application/octet-stream")
+	req.Header.Set("Transfer-Encoding", "chunked")
 	rsp, err = fs.client.Do(req)
 	if err != nil {
 		fmt.Errorf("FileSystem.Create(%s) - bad url: %s", loc, err.Error())
@@ -166,6 +170,10 @@ func (fs *FileSystem) Append(data io.Reader, p Path, buffersize int) (bool, erro
 	}
 
 	req, _ = http.NewRequest("POST", u.String(), data)
+	// for HttpFs compatibility
+	// https://www.ibm.com/support/knowledgecenter/en/SSPT3X_3.0.0/com.ibm.swg.im.infosphere.biginsights.admin.doc/doc/admin_fileupload_rest_apis.html
+	req.Header.Set("Content-Type", "application/octet-stream")
+	req.Header.Set("Transfer-Encoding", "chunked")
 	rsp, err = fs.client.Do(req)
 	if err != nil {
 		return false, err
